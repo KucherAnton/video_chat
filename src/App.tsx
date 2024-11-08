@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import Room from './pages/Room';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: React.FC = () => {
+	useEffect(() => {
+		navigator.mediaDevices
+			.getUserMedia({ video: true, audio: true })
+			.then((stream) => {
+				stream.getTracks().forEach((track) => track.stop());
+			})
+			.catch((error) => {
+				console.error('Ошибка доступа к камере или микрофону:', error);
+			});
+	}, []);
+
+	return (
+		<Router>
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/room/:roomId" element={<Room />} />
+			</Routes>
+		</Router>
+	);
+};
 
 export default App;
